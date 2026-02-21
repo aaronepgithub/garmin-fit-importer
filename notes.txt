@@ -1,0 +1,1 @@
+Create a simple python script tht will import fit files created by myWhoosh into my garmin connect account.  The public github project (https://github.com/cyberjunky/python-garminconnect) supports this but I don't need all the additional capabilities.  Just looking for the simple upload function.
