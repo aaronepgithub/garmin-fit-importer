@@ -16,17 +16,23 @@ A simple Python script to upload `.fit` files (e.g., from MyWhoosh) to Garmin Co
    $env:GARMIN_PASSWORD = "your-password"
    ```
 
-## Usage
-
-### Upload a single file
+### Command Line Usage
+#### Upload a single file
 ```bash
 python import_fit.py path/to/activity.fit
 ```
 
-### Upload all FIT files in a directory
+#### Upload all FIT files in a directory
 ```bash
 python import_fit.py path/to/mywhoosh/exports/
 ```
+
+### Streamlit Web App Usage
+Run the interactive web application:
+```bash
+streamlit run app.py
+```
+This will open a browser window where you can enter your credentials and drag-and-drop your FIT files.
 
 ### Session Persistence
 The script saves your session in `~/.garmin_session` to avoid frequent logins and MFA prompts. If the login fails, it will attempt a fresh login and refresh the session.
