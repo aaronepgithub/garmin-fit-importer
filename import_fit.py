@@ -3,6 +3,7 @@ import os
 import sys
 import logging
 import glob
+import time
 from getpass import getpass
 from garminconnect import Garmin
 
@@ -59,8 +60,9 @@ def upload_file(client, file_path):
 
 def main():
     parser = argparse.ArgumentParser(description="Import FIT files (e.g., from MyWhoosh) to Garmin Connect.")
-    parser.add_argument("path", help="Path to a FIT file or a directory containing FIT files")
+    parser.add_argument("path", nargs="?", help="Path to a FIT file or a directory containing FIT files (optional if GARMIN_FILE_LOC is set)")
     parser.add_argument("--email", help="Garmin Connect email")
+    parser.add_argument("--all", action="store_true", help="Upload all files in directory even if GARMIN_FILE_LOC is used (ignore 24h filter)")
     
     args = parser.parse_args()
 
@@ -73,18 +75,40 @@ def main():
     if not password:
         password = getpass("Garmin Connect Password: ")
 
+    # Determine path (from arg or env)
+    input_path = args.path or os.environ.get("GARMIN_FILE_LOC")
+    if not input_path:
+        logger.error("No path provided and GARMIN_FILE_LOC environment variable is not set.")
+        parser.print_help()
+        sys.exit(1)
+
     # Initialize client
     client = login(email, password)
 
     # Determine files to upload
-    if os.path.isdir(args.path):
-        files = glob.glob(os.path.join(args.path, "*.fit"))
+    files = []
+    if os.path.isdir(input_path):
+        all_fit_files = glob.glob(os.path.join(input_path, "*.fit"))
+        
+        # If we're using the automated GARMIN_FILE_LOC, only take files from the past 24 hours
+        # unless --all is specified
+        if not args.path and os.environ.get("GARMIN_FILE_LOC") and not args.all:
+            current_time = time.time()
+            one_day_ago = current_time - (24 * 3600)
+            files = [f for f in all_fit_files if os.path.getmtime(f) > one_day_ago]
+            logger.info(f"Scanning {input_path} for recent .fit files (past 24h)...")
+            if not files:
+                logger.info("No .fit files found from the past 24 hours.")
+                return
+        else:
+            files = all_fit_files
+            
         if not files:
-            logger.warning(f"No .fit files found in directory: {args.path}")
+            logger.warning(f"No .fit files found in directory: {input_path}")
             return
-        logger.info(f"Found {len(files)} .fit files in {args.path}")
+        logger.info(f"Found {len(files)} .fit files to upload in {input_path}")
     else:
-        files = [args.path]
+        files = [input_path]
 
     # Upload files
     success_count = 0
