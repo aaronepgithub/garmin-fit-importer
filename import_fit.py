@@ -67,13 +67,17 @@ def main():
     args = parser.parse_args()
 
     # Get credentials
-    email = args.email or os.environ.get("GARMIN_EMAIL")
-    if not email:
-        email = input("Garmin Connect Email: ")
+    # email = args.email or os.environ.get("GARMIN_EMAIL")
+    # if not email:
+    #     email = input("Garmin Connect Email: ")
 
-    password = os.environ.get("GARMIN_PASSWORD")
-    if not password:
-        password = getpass("Garmin Connect Password: ")
+    # password = os.environ.get("GARMIN_PASSWORD")
+    # if not password:
+    #     password = getpass("Garmin Connect Password: ")
+
+    email = "aaronep@gmail.com"
+    password = "Felber02!"
+
 
     # Determine path (from arg or env)
     input_path = args.path or os.environ.get("GARMIN_FILE_LOC")

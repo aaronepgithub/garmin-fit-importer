@@ -1,5 +1,9 @@
 # Garmin Connect FIT Importer
 
+## Also a dropbox file downloader
+.\.venv\Scripts\python.exe download_dropbox.py
+
+
 A simple Python script to upload `.fit` files (e.g., from MyWhoosh) to Garmin Connect.
 
 ## Setup
