@@ -1,7 +1,4 @@
 @echo off
-SET GARMIN_EMAIL=aaronep@gmail.com
-SET GARMIN_PASSWORD=Felber02!
-SET GARMIN_FILE_LOC=C:\Users\aaronep\Downloads
 
 :: Navigate to the script directory
 cd /d "C:\Users\aaronep\Documents\Dev\garmin-fit-importer"
@@ -10,10 +7,11 @@ cd /d "C:\Users\aaronep\Documents\Dev\garmin-fit-importer"
 call .venv\Scripts\activate
 
 :: Run the import script (past 24h by default)
-python import_fit_working.py
+python download_dropbox.py
 
 :: Keep window open to see results
 echo.
 echo Import process finished.
-echo Task ran at %date% %time% >> C:\task_test_log_garmin.txt
+echo Task ran at %date% %time% >> C:\task_test_log_dropbox.txt
+
 pause
